@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.gateway.app }}
+  name: {{ .Values.gateway.deployment.name }}
+spec:
+  replicas: {{ .Values.gateway.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.gateway.app }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.gateway.app }}
+    spec:
+      containers:
+      - name: {{ .Values.gateway.containers.gateway.name }}
+        image: {{ .Values.gateway.subsets.v1.containers.gateway.image }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.gateway.service.targetPort }}
+          protocol: TCP
+        command: |
+          exec nginx -g 'daemon off;'
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.gateway.service.targetPort }}
+          initialDelaySeconds: 5
+          timeoutSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.gateway.service.targetPort }}
+          initialDelaySeconds: 15
+          timeoutSeconds: 20
+        resources:
+          limits:
+            cpu: {{ .Values.gateway.deployment.resources.limits.cpu }}
+          requests:
+            cpu: {{ .Values.gateway.deployment.resources.requests.cpu }}
+            memory: {{ .Values.gateway.deployment.resources.requests.memory }}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

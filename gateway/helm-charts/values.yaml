@@ -1,0 +1,18 @@
+repo:
+  version: latest
+
+gateway:
+  app: gateway
+  service:
+    name: gateway
+    port: 80
+    targetPort: 80
+  deployment:
+    name: gateway-v1
+    replicas: 1
+    resources:
+      limits:
+        cpu: 1
+      requests:
+        cpu: 10m
+        memory: 128Mi
