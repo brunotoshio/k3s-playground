@@ -10,8 +10,13 @@
 ## OS install
 - Download the [Raspberry Pi Imager ](https://www.raspberrypi.com/software/).
 - Choose the OS `Raspberry Pi OS 32-bit`
+- Configure a new user (https://stackoverflow.com/questions/71804429/raspberry-pi-ssh-access-denied)
 - Connect the micro SD and write the OS image.
 - Create an empty file named `ssh` and save it in the root of the SD card. This will enable headless configuration through SSH.
+- (If you haven't created a user) Create a single line file `userconf` that contains the `username:hashed-password`. To hash the password, you can run
+```
+echo 'your_password_here' | openssl passwd -6 -stdin
+```
 - Configure wifi (if necessary) by adding a file named `wpa_supplicant.conf` in the root of the SD card with the following contents:
     ```
     country=JP
@@ -28,11 +33,10 @@
 - Insert the micro SD in Raspberry Pi and power it.
 
 ## Setup k3s
-- Connect to Raspberry pi through SSH:
+- Connect to Raspberry pi through SSH (use the username and password you configured in the `userconf` file):
     ```
-    ssh pi@raspberrypi.local
+    ssh username@raspberrypi.local
     ```
-- Default password is `raspberry`.
 - Configure Raspberry pi using:
     ```
     sudo raspi-config
