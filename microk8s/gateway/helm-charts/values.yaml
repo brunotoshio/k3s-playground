@@ -16,3 +16,7 @@ gateway:
       requests:
         cpu: 10m
         memory: 128Mi
+  containers:
+    gateway:
+      name: gateway
+      image: toskube:32000/gateway

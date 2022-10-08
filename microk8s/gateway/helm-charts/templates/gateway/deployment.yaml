@@ -21,14 +21,13 @@ spec:
     spec:
       containers:
       - name: {{ .Values.gateway.containers.gateway.name }}
-        image: {{ .Values.gateway.subsets.v1.containers.gateway.image }}
+        image: {{ .Values.gateway.containers.gateway.image }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         ports:
         - name: http
           containerPort: {{ .Values.gateway.service.targetPort }}
           protocol: TCP
-        command: |
-          exec nginx -g 'daemon off;'
+        command: ['/bin/sh','-c','exec nginx -g "daemon off;"']
         readinessProbe:
           httpGet:
             path: /

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-docker build -t toskube:32000/gateway .
+docker build -t toskube:32000/gateway:latest .
 
-TAG=$(git rev-parse HEAD)
+TAG=$(docker images --filter=reference=toskube:32000/gateway:latest --format "{{.ID}}")
 
-docker tag $TAG toskube:32000/gateway
+docker tag $TAG toskube:32000/gateway:latest
 
-docker push toskube:32000/gateway
+docker push toskube:32000/gateway:latest
